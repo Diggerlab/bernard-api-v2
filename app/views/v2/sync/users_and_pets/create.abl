@@ -1,0 +1,38 @@
+object false
+
+child(@user => "user") do 
+	attribute :id, :nickname, :email, :authentication_token, :status, :created_at, :code
+	node(:new_messages) { @user.unread_messages.count }
+	node(:new_system_messages) { @user.unread_messages.where(category: Message.categories[:system]).count }
+	node(:new_game_messages) { @user.unread_messages.where(category: Message.categories[:game]).count }
+	node(:new_team_messages) { @user.unread_messages.where(category: Message.categories[:team]).count }
+	node(:gems) {|u| u.account.gems }
+	node(:coins) {|u| u.account.coins }
+end
+
+
+child(@items => 'items') do 
+	attributes :id, :name_ch, :name_jp, :name_tw, :code, :description_ch, :description_jp, :description_tw, :coins, :gems, :sequence, :tag, :min_level, :max_level
+	node(:name_en) { |item| item.name }
+	node(:description_en) { |item| item.description }
+	node(:icon) { |item| item.icon_by_code }
+
+	child :event_template do 
+		attributes :id, :cEnergy, :cEXP, :cHygiene, :cIQ, :cMood, :cSQ, :cState, :code, :preEnergy, :preEXP, :preHygiene, :preIQ, :preMood, :preSQ, :preState, :category, :animEatable, :animPet, :animTool, :animFPet0, :animFPet1, :animBG, :dEnergy,:dHygiene,:dLength,:dMood, :soundEffect
+	end
+
+	child :item_category do 
+		attributes :id, :name_ch, :name_jp, :name_tw, :code, :items_count, :description_jp, :description_ch, :description_tw
+		node(:name_en) {|category| category.name }
+		node(:description_en) {|category| category.description }
+	end
+
+	node(:count, :if => lambda { |item| item.code == 'apple'  }) { 3 }
+	node(:count, :if => lambda { |item| item.code == 'hamburger'  }) { 3 }
+	node(:count, :if => lambda { |item| item.code == 'swordfish'  }) { 1 }
+	node(:count, :if => lambda { |item| item.code == 'book-I'  }) { 3 }
+	node(:count, :if => lambda { |item| item.code == 'barbell'  }) { 3 }
+	node(:count, :if => lambda { |item| item.code == 'lollipop-red'  }) { 1 }
+	node(:count, :if => lambda { |item| item.code == 'mushroom'  }) { 1 }
+
+end

@@ -6,8 +6,8 @@ class User <  ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :omniauthable, :token_authenticatable
+  # devise :database_authenticatable, :registerable,
+  #        :recoverable, :rememberable, :trackable, :omniauthable, :token_authenticatable
 
   # Setup accessible (or protected) attributes for your model
   # attr_accessible :id, :email, :password, :password_confirmation, :remember_me, 
@@ -27,14 +27,14 @@ class User <  ActiveRecord::Base
   has_many :quests
   has_many :pets
   has_many :messages
-  has_many :unread_messages, class_name: 'Message', conditions: "status='new'"
-  has_one :current_pet, :class_name => 'Pet', :conditions => "pets.status = 'active'", :order => 'updated_at desc'
+  has_many :unread_messages, -> {where("status = 'new'")},class_name: 'Message'#, conditions: "status='new'"
+  has_one :current_pet,  -> {where("status = 'active'").order("updated_at").desc}, :class_name => 'Pet' #:order => 'updated_at desc'
 
   has_many :racings
   has_many :racing_results
   has_one :racing_ranking, class_name: 'RacingRanking'
   has_one :pop_ranking, class_name: 'PopRanking'
-  has_one :pop_game_point, class_name: 'GamePoint', conditions: "game='pop'"
+  has_one :pop_game_point, -> {where("game = 'pop'")},class_name: 'GamePoint'#, conditions: "game='pop'"
   has_one :user_stat
   
   has_one :lottery_stat
