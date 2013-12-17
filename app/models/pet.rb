@@ -1,7 +1,7 @@
 class Pet <  ActiveRecord::Base
   #include ActiveUUID::UUID
   
-  #attr_accessible :name, :user_id, :gender, :exp, :level, :iq, :sq, :teamed, :id, :status, :mood, :energy, :hygiene, :stage, :single_force, :team_force, :racing_matches, :racing_wins_init, :racing_wins_pass, :racing_champions, :depressed, :infected, :collapsed
+  attr_accessible :name, :user_id, :gender, :exp, :level, :iq, :sq, :teamed, :id, :status, :mood, :energy, :hygiene, :stage, :single_force, :team_force, :racing_matches, :racing_wins_init, :racing_wins_pass, :racing_champions, :depressed, :infected, :collapsed
 
   # validates :status, :inclusion => %w(active inactive)
   validates_presence_of :user_id #, :name

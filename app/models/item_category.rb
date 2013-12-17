@@ -1,6 +1,6 @@
 class ItemCategory < ActiveRecord::Base
   #include ActiveUUID::UUID
-  # attr_accessible :name, :description, :code, :storage_type, :name_ch, :name_jp, :name_tw, :description_ch, :description_jp, :description_tw, :sequence
+   attr_accessible :name, :description, :code, :storage_type, :name_ch, :name_jp, :name_tw, :description_ch, :description_jp, :description_tw, :sequence
   # validates_presence_of :name
   # validates :storage_type, :inclusion => { :in => %w(slot pocket coin gem)}
 

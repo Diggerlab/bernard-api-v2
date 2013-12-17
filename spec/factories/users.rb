@@ -1,8 +1,7 @@
 FactoryGirl.define do 
 	factory :user do 
 		sequence(:nickname) {|n| "Micky Mouse #{n}"}
-		password '123455'
-		password_confirmation {password}
+		encrypted_password '123455'
 		sequence(:email) {|n| "micky#{n}@email.com"}
 		sequence(:authentication_token) {|n| "test#{n}"}
 		status 'pending'

@@ -2,7 +2,7 @@
 require "digest/md5"
 
 class User <  ActiveRecord::Base
-  #include ActiveUUID::UUID
+  # include ActiveUUID::UUID
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
@@ -10,9 +10,9 @@ class User <  ActiveRecord::Base
   #        :recoverable, :rememberable, :trackable, :omniauthable, :token_authenticatable
 
   # Setup accessible (or protected) attributes for your model
-  # attr_accessible :id, :email, :password, :password_confirmation, :remember_me, 
-  #   :nickname, :status, :device_token, :language, :silence_start, :silence_period, 
-  #   :code
+   # attr_accessible :id, :email, :password, :password_confirmation, :remember_me, 
+   #  :nickname, :status, :device_token, :language, :silence_start, :silence_period, 
+   #  :code
 
   # email is opional for binding social network
   # validates_uniqueness_of :email
@@ -27,14 +27,14 @@ class User <  ActiveRecord::Base
   has_many :quests
   has_many :pets
   has_many :messages
-  has_many :unread_messages, -> {where("status = 'new'")},class_name: 'Message'#, conditions: "status='new'"
-  has_one :current_pet,  -> {where("status = 'active'").order("updated_at").desc}, :class_name => 'Pet' #:order => 'updated_at desc'
+  has_many :unread_messages, class_name: 'Message', conditions: "status='new'"
+  has_one :current_pet, :class_name => 'Pet', :conditions => "pets.status = 'active'", :order => 'updated_at desc'
 
   has_many :racings
   has_many :racing_results
   has_one :racing_ranking, class_name: 'RacingRanking'
   has_one :pop_ranking, class_name: 'PopRanking'
-  has_one :pop_game_point, -> {where("game = 'pop'")},class_name: 'GamePoint'#, conditions: "game='pop'"
+  has_one :pop_game_point, class_name: 'GamePoint', conditions: "game='pop'"
   has_one :user_stat
   
   has_one :lottery_stat
@@ -50,7 +50,7 @@ class User <  ActiveRecord::Base
 
   before_validation :generate_default_values, on: :create
   before_create :create_code
-  after_create :create_account
+  #after_create :create_account
   after_create :discard_users_and_pets, if: ->(user) {user.device_token.present?}
 
   alias_attribute :name, :nickname
@@ -116,8 +116,8 @@ class User <  ActiveRecord::Base
   end
 
   def generate_default_values
-    self.password = random_password if self.password.blank? 
-    self.password_confirmation = self.password if self.password_confirmation.blank? 
+    self.encrypted_password = random_password if self.encrypted_password.blank? 
+    #self.password_confirmation = self.encrypted_password if self.password_confirmation.blank? 
     self.email = random_email if self.email.blank?
   end
 

@@ -2,6 +2,8 @@
 #config.ru
 require 'grape'
 require 'active_record'
+require 'rspec'
+require 'factory_girl'
 
 require 'grape/rabl'
 require 'active_support/core_ext'
@@ -14,12 +16,12 @@ require './app/models/item_category.rb'
 require './app/models/system_variable.rb'
 require './app/models/pet_level.rb'
 require './app/models/user.rb'
-require './app/models/event_template.rb'
+require './app/models/pet.rb'
 require './app/models/user_stat.rb'
 
 
 use Rack::Config do |env|
-  env['api.tilt.root'] = '/Users/daneil/APP/chichi/Grape/app/views'
+  env['api.tilt.root'] = '/Users/daneil/APP/bernard-api-v2/app/views'
 end
 ActiveRecord::Base.establish_connection(
   adapter:  'mysql2',
@@ -46,10 +48,29 @@ class App < Grape::API
     resource :sync do 
       resource :users_and_pets do
         post do
-
+          params[:user]['status'] = 'generated'
+          @user = User.create!(params[:user])
+          @pet = @user.pets.create!(params[:pet])
+          # OP: initial items with new user 
+          @items = Item.where(code: ['hamburger', 'apple', 'book-I', 'swordfish', 'barbell', 'lollipop-red', 'mushroom'])
         end
-        put ':id' do
 
+        put ':id' do
+          if params[:reset_pet_id].present?
+            current_user.pets.find(params[:reset_pet_id]).update_attributes! status: 'inactive'
+          end
+
+          @unread_messages = current_user.unread_messages
+          @pet = current_user.pets.find_or_initialize_by_id(params[:id])
+          @pet.update_attributes! params[:pet]
+
+          user_settings = {}
+          %w(device_token language silence_start silence_period nickname).each do |key|
+            user_settings.merge!({key.to_sym => params[key.to_sym]}) if params[key.to_sym]
+          end
+          @pet.user.update_attributes! user_settings
+          @pet.user.assure_code!
+          UserStat.sync @pet.user
         end
       end
       

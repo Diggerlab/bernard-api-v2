@@ -97,6 +97,7 @@ GEM
     tilt (2.0.0)
     timers (1.1.0)
     tzinfo (0.3.38)
+    uuidtools (2.1.4)
     virtus (1.0.0)
       axiom-types (~> 0.0.5)
       coercible (~> 0.2)
@@ -108,10 +109,10 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (= 3.2.13)
-  factory_girl
+  factory_girl (>= 4.3)
   grape
   grape-rabl
-  guard
+  guard (> 2.2)
   guard-rspec
   mysql2
   oj
@@ -119,3 +120,4 @@ DEPENDENCIES
   rake
   rspec
   terminal-notifier-guard
+  uuidtools
